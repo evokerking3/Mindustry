@@ -37,6 +37,8 @@ jobs:
 
     - name: Copy Natives
       run: ./gradlew copyNatives
+    - name: Java version
+      run: java --version
 
     - name: Install RoboVM
       run: ./gradlew ios:robovmInstall
