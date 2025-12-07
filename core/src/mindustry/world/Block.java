@@ -95,8 +95,9 @@ public class Block extends UnlockableContent implements Senseable{
     /** if true, double-tapping this configurable block clears configuration. */
     public boolean clearOnDoubleTap = false;
     /** whether this block has a tile entity that updates */
+    @NoPatch
     public boolean update;
-    /** whether this block has health and can be destroyed */
+    /** whether this block has health and can be destroyed. note that setting this to false does nothing if update = true! */
     public boolean destructible;
     /** whether unloaders work on this block */
     public boolean unloadable = true;
@@ -313,6 +314,8 @@ public class Block extends UnlockableContent implements Senseable{
     public Sound breakSound = Sounds.breaks;
     /** Sounds made when this block is destroyed.*/
     public Sound destroySound = Sounds.boom;
+    /** Volume of destruction sound. */
+    public float destroySoundVolume = 1f;
     /** Range of destroy sound. */
     public float destroyPitchMin = 1f, destroyPitchMax = 1f;
     /** How reflective this block is. */
@@ -321,6 +324,8 @@ public class Block extends UnlockableContent implements Senseable{
     public Color lightColor = Color.white.cpy();
     /** If true, drawLight() will be called for this block. */
     public boolean emitLight = false;
+    /** If true, this block obstructs light emitted by other blocks. */
+    public boolean obstructsLight = true;
     /** Radius of the light emitted by this block. */
     public float lightRadius = 60f;
 

@@ -88,6 +88,7 @@ public class DesktopLauncher extends ClientLauncher{
                             case "antialias" -> samples = 16;
                             case "debug" -> Log.level = LogLevel.debug;
                             case "maximized" -> maximized = Boolean.parseBoolean(arg[i + 1]);
+                            case "testMobile" -> testMobile = true;
                             case "gltrace" -> {
                                 Events.on(ClientCreateEvent.class, e -> {
                                     var profiler = new GLProfiler(Core.graphics);
@@ -115,20 +116,21 @@ public class DesktopLauncher extends ClientLauncher{
 
         Version.init();
         boolean useSteam = Version.modifier.contains("steam");
-        testMobile = Seq.with(args).contains("-testMobile");
 
         if(useDiscord){
-            try{
-                DiscordRPC.connect(discordID);
-                Log.info("Initialized Discord rich presence.");
-                Runtime.getRuntime().addShutdownHook(new Thread(DiscordRPC::close));
-            }catch(NoDiscordClientException none){
-                //don't log if no client is found
-                useDiscord = false;
-            }catch(Throwable t){
-                useDiscord = false;
-                Log.warn("Failed to initialize Discord RPC - you are likely using a JVM <16.");
-            }
+            Threads.daemon(() -> {
+                try{
+                    DiscordRPC.connect(discordID);
+                    Log.info("Initialized Discord rich presence.");
+                    Runtime.getRuntime().addShutdownHook(new Thread(DiscordRPC::close));
+                }catch(NoDiscordClientException none){
+                    //don't log if no client is found
+                    useDiscord = false;
+                }catch(Throwable t){
+                    useDiscord = false;
+                    Log.warn("Failed to initialize Discord RPC - you are likely using a JVM <16.");
+                }
+            });
         }
 
         if(useSteam){
